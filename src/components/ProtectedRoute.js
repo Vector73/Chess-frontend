@@ -4,12 +4,12 @@ import { connect, useSelector } from 'react-redux';
 
 const ProtectedRoute = ({ allowedRoutes, children }) => {
     const user = useSelector(state => state.users)
-    
-  if (allowedRoutes.includes(window.location.pathname) || user.authenticated === 1) {
-    return <>{children}</>;
-  } else {
-    return <Navigate to="/" />;
-  }
+    console.log(user);
+    if (allowedRoutes.includes(window.location.pathname) || user.authenticated === 1) {
+        return <>{children}</>;
+    } else {
+        return <Navigate to="/" />;
+    }
 };
 
 export default ProtectedRoute;
