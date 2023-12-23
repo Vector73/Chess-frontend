@@ -1,0 +1,71 @@
+.container {
+  background-color: #343a40;
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.row {
+  flex: 1;
+  justify-content: center;
+}
+
+.col {
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cardContainer {
+  background-color: #292b2c !important;
+  padding: 20px;
+  border-radius: 10px;
+  color: white !important;
+  width: 90%;
+  margin-top: 20px;
+}
+
+.playButton {
+  width: 70%;
+  margin-top: 20px;
+}
+
+.pastGamesContainer {
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  overflow-y: hidden !important;
+}
+
+.pastGamesCard {
+  background-color: #292b2c !important;
+  padding: 20px;
+  border-radius: 10px;
+  color: white !important;
+  width: 90%;
+  height: 30rem !important;
+  overflow-y: hidden !important;
+}
+.pastGames {
+  background-color: #292b2c !important;
+  height: 25rem !important;
+  border: none !important;
+}
+
+.navbarHeight {
+  height: 80px;
+  position: fixed !important;
+  z-index: 10;
+}
+
+@media (max-width: 576px) {
+  .navbarHeight {
+    height: auto;
+    margin-bottom: 10px;
+  }
+}

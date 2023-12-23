@@ -1,0 +1,30 @@
+.body {
+  background-image: url("../../public/bg-login.png");
+  background-size: auto;
+}
+
+.css-1nmdiq5-menu {
+  z-index: 10 !important;
+  box-sizing: "border-box" !important;
+}
+
+.row-chess {
+  margin-right: 7rem !important;
+  padding: 1px !important;
+}
+
+@media (max-width: 576px) {
+  .row-chess {
+    margin: 0 !important;
+  }
+}
+
+.col-chess {
+  margin-left: 10rem !important;
+}
+
+@media (max-width: 576px) {
+  .col-chess {
+    margin: 0 !important;
+  }
+}
