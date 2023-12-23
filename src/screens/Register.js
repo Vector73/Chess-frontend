@@ -43,7 +43,7 @@ export default function Register() {
             password: password,
             username: username,
         }
-        const apiUrl = process.env.REACT_APP_BASE_URL;
+        const apiUrl = process.env.REACT_APP_API_URL;
         const response = await fetch(`${apiUrl}/login/sign-up`, {
             method: "POST",
             headers: {
