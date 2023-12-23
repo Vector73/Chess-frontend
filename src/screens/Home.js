@@ -12,8 +12,8 @@ export default function Home() {
 
     useEffect(() => {
         console.log("home");
-        const apiUrl = process.env.BASE_URL;
-        fetch(apiUrl+"/home", { method: 'POST' })
+        const apiUrl = process.env.REACT_APP_API_URL;
+        fetch(`${apiUrl}/home`, { method: 'POST' })
             .then(res => res.json())
             .then(res => {
                 console.log(res.authenticated);

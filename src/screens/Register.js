@@ -20,16 +20,16 @@ export default function Register() {
         setUsernameError("");
         setPasswordError("");
         setEmailError("");
-        if (username.length < 1) {
-            setUsernameError("Invalid Username");
+        if (username.length < 4 || username.length > 10) {
+            setUsernameError("Username should be of length 4-10");
             return false;
         }
         else if (email === "") {
             setEmailError("Invalid Email");
             return false;
         }
-        else if (password.length < 1) {
-            setPasswordError("Invalid Password");
+        else if (password.length < 8) {
+            setPasswordError("Password must be greater than 7 characters");
             return false;
         }
         return true;
@@ -44,7 +44,7 @@ export default function Register() {
             username: username,
         }
         const apiUrl = process.env.REACT_APP_BASE_URL;
-        const response = await fetch(apiUrl+"/login/sign-up", {
+        const response = await fetch(`${apiUrl}/login/sign-up`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
