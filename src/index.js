@@ -43,7 +43,7 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <RouterProvider router={router} basename="https://chess-ir64.onrender.com">
+                <RouterProvider router={router} basename="/">
                     <App />
                 </RouterProvider>
             </PersistGate>
