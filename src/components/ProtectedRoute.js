@@ -6,6 +6,7 @@ const ProtectedRoute = ({ allowedRoutes, children }) => {
     const user = useSelector(state => state.users)
     console.log(user);
     if (allowedRoutes.includes(window.location.pathname) || user.authenticated === 1) {
+        console.log("in")
         return <>{children}</>;
     } else {
         return <Navigate to="/" />;
