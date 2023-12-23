@@ -14,6 +14,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Game from "./screens/Game";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedRoute from "./components/ProtectedRoute";
+import {disableReactDevTools} from '@fvilers/disable-react-devtools';
 
 
 const router = createBrowserRouter([
@@ -34,6 +35,8 @@ const router = createBrowserRouter([
         ],
     },
 ]);
+
+if (process.env.NODE_ENV === 'production') disableReactDevTools();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
