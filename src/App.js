@@ -37,9 +37,10 @@ function App() {
         })
         const apiUrl = process.env.BASE_URL;
         console.log(apiUrl)
-        fetch(apiUrl+"/home", { method: "POST" })
+        fetch("https://chess-backend-88xx.onrender.com/home", { method: "POST" })
             .then((res) => res.json())
             .then((res) => {
+                console.log(res);
                 setUserData(res);
             });
 
