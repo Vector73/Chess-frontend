@@ -1,18 +1,15 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
-const ProtectedRoute = ({ isAuthenticated, allowedRoutes, children }) => {
+const ProtectedRoute = ({ allowedRoutes, children }) => {
+    const user = useSelector(state => state.users)
     
-  if (allowedRoutes.includes(window.location.pathname) || isAuthenticated) {
+  if (allowedRoutes.includes(window.location.pathname) || user.authenticated === 1) {
     return <>{children}</>;
   } else {
     return <Navigate to="/" />;
   }
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.users.authenticated === 1,
-});
-
-export default connect(mapStateToProps)(ProtectedRoute);
+export default ProtectedRoute;
