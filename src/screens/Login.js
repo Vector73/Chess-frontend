@@ -35,8 +35,8 @@ export default function Login() {
             password: password,
             username: username,
         }
-        const apiUrl = process.env.REACT_APP_API_BASE_URL;
-        const response = await fetch(apiUrl+"/login/sign-in", {
+        const apiUrl = process.env.BASE_URL;
+        const response = await fetch("https://chess-backend-88xx.onrender.com/login/sign-in", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
