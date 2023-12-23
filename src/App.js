@@ -35,7 +35,7 @@ function App() {
             console.log(onlineUsers)
             dispatch(setOnlineUsers(parseUsers(onlineUsers.online)))
         })
-        const apiUrl = process.env.BASE_URL;
+        const apiUrl = process.env.REACT_APP_BASE_URL;
         console.log(apiUrl)
         fetch("https://chess-backend-88xx.onrender.com/home", { method: "POST" })
             .then((res) => res.json())
