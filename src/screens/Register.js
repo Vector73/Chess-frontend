@@ -71,7 +71,6 @@ export default function Register() {
             else if (status.emailNotValid) {
                 setEmailError('Email not valid');
             }
-            alert('Registration Failed');
         }
     }
 
