@@ -35,8 +35,9 @@ function App() {
             console.log(onlineUsers)
             dispatch(setOnlineUsers(parseUsers(onlineUsers.online)))
         })
-
-        fetch("/home", { method: "POST" })
+        const apiUrl = process.env.BASE_URL;
+        console.log(apiUrl)
+        fetch(apiUrl+"/home", { method: "POST" })
             .then((res) => res.json())
             .then((res) => {
                 setUserData(res);
