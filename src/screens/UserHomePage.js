@@ -47,7 +47,8 @@ export default function UserHomePage() {
     }
 
     const fetchGame = async () => {
-        const response = await fetch("/game/games", {
+        const apiUrl = process.env.BASE_URL;
+        const response = await fetch(apiUrl+"/game/games", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

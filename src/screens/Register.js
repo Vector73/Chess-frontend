@@ -43,8 +43,8 @@ export default function Register() {
             password: password,
             username: username,
         }
-
-        const response = await fetch("/login/sign-up", {
+        const apiUrl = process.env.BASE_URL;
+        const response = await fetch(apiUrl+"/login/sign-up", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
