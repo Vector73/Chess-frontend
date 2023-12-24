@@ -24,7 +24,8 @@ export default function UserHomePage() {
     }, [])
 
     async function fetchCompletedGames() {
-        const response = await fetch("/game/completedGames", {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const response = await fetch(`${apiUrl}/game/completedGames`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

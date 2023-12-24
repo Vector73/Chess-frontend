@@ -36,7 +36,6 @@ function App() {
             dispatch(setOnlineUsers(parseUsers(onlineUsers.online)))
         })
         const apiUrl = process.env.REACT_APP_API_URL;
-        console.log(apiUrl)
         fetch(`${apiUrl}/home`, { method: "POST" })
             .then((res) => res.json())
             .then((res) => {

@@ -12,7 +12,7 @@ import { SideMenu } from "../components/Navbar";
 import { setGame } from "../features/gameSlice";
 
 export default function Play() {
-    // const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying] = useState(false);
     const [time, setTime] = useState(0);
     const user = useSelector((state) => state.users);
     const game = useSelector((state) => state.game);
@@ -21,7 +21,6 @@ export default function Play() {
     const onlineUsers = useSelector((state) => state.onlineUsers);
     const [opponent, setOpponent] = useState(onlineUsers && onlineUsers.length ? onlineUsers[0] : "");
     const dispatch = useDispatch();
-    const {playing} = useLocation();
     console.log("Is socket connected?", socket.connected);
 
     useEffect(() => {
@@ -38,12 +37,12 @@ export default function Play() {
             setTimeout(() => { setRequestDraw(false) }, 2000);
         })
 
-        // fetchGame();
+        fetchGame();
     }, [])
 
     function play() {
         console.log(opponent)
-        if (opponent && opponent !== "Select user" && time) {
+        if (opponent && opponent !== "Select user" && time && !playing) {
             socket.emit("challenge", { challenger: user.username, player: opponent, time: time, handshake: 0 })
         }
     }
@@ -83,24 +82,24 @@ export default function Play() {
         socket.emit("rejectDraw", { gameId: game.gameId, color: game.color });
     }
 
-    // const fetchGame = async () => {
-    //     const response = await fetch("/game/games", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({ username: user.username, gameId: game.gameId }),
-    //     });
+    const fetchGame = async () => {
+        const response = await fetch("/game/games", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username: user.username, gameId: game.gameId }),
+        });
 
-    //     const activeGame = await response.json();
-    //     if (activeGame.found) {
-    //         setPlaying(true);
-    //     }
-    //     else {
-    //         setPlaying(false);
-    //         dispatch(setGame({}));
-    //     }
-    // }
+        const activeGame = await response.json();
+        if (activeGame.found) {
+            setPlaying(true);
+        }
+        else {
+            setPlaying(false);
+            dispatch(setGame({}));
+        }
+    }
 
     return (
         <Container fluid className={styles.container + " h-100"}>
@@ -142,7 +141,7 @@ export default function Play() {
                                     />
                                 </Form.Group>
                                 <InputGroup className="mt-3">
-                                    <Button variant="success" style={{ width: '100%' }} onClick={play}>
+                                    <Button variant="success" style={{ width: '100%' }} onClick={play} disabled={playing}>
                                         Play
                                     </Button>
                                 </InputGroup>
