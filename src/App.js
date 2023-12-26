@@ -11,35 +11,25 @@ import Banner from "./components/Notifications";
 import { addChallenge, removeChallenge } from "./features/challengeSlice";
 import StyledLink from "./components/StyledLink";
 import Loading from "./components/Loading";
+import { addMessage, clearChat } from "./features/messagesSlice";
 
 
 function App() {
     const [userData, setUserData] = useState({ authenticated: -1 });
     const user = useSelector((state) => state.users);
     const game = useSelector((state) => state.game);
-    const challenges = useSelector((state) => state.challenges);
     const dispatch = useDispatch();
     const location = useLocation();
-    const navigate = useNavigate();
 
-    function parseUsers(users) {
-        console.log(users, user)
-        if (!user) return [];
-        return users
-            .filter((username) => username !== user.username);
-    }
-    console.log("app")
     useEffect(() => {
-        socket.connect();
         socket.on("onlineUsers", (onlineUsers) => {
-            console.log(onlineUsers)
             dispatch(setOnlineUsers(parseUsers(onlineUsers.online)))
         })
+
         const apiUrl = process.env.REACT_APP_API_URL;
         fetch(`${apiUrl}/home`, { method: "POST" })
             .then((res) => res.json())
             .then((res) => {
-                console.log(res);
                 setUserData(res);
             });
 
@@ -57,7 +47,7 @@ function App() {
 
         socket.on("joinGame", ({ opponent, gameId, color, time }) => {
             dispatch(removeChallenge({ opponent }))
-
+            dispatch(clearChat());
             dispatch(setGame({
                 opponent,
                 gameId,
@@ -68,11 +58,31 @@ function App() {
             window.location.href = `/chess/${gameId}`;
         })
 
-        socket.on("gameOver", ({ winner, reason, draw }) => {
-            console.log("gameover in app")
-            dispatch(setGame({}));
+        socket.on("sendMessage", ({ sender, content, key }) => {
+            dispatch(addMessage({
+                key,
+                sender,
+                content,
+            }))
         })
+
+        socket.on("clearChat", () => { dispatch(clearChat()); });
+
+        socket.on("gameOver", ({ winner, reason, draw }) => {
+            dispatch(setGame({ color: game.color }));
+        })
+
+        return () => {
+            socket.off("sendMessage");
+            socket.off("clearChat");
+        };
     }, []);
+
+    function parseUsers(users) {
+        if (!user) return [];
+        return users
+            .filter((username) => username !== user.username);
+    }
 
     if (userData.authenticated === 0 || userData.authenticated === 1) {
         return (

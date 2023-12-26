@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import thunk from 'redux-thunk';
 import challengeReducer from '../features/challengeSlice';
+import messagesReducer from '../features/messagesSlice';
 
 const persistConfig = {
   key: 'root',
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   onlineUsers: onlineUsersReducer,
   game: gameReducer,
   challenges: challengeReducer,
+  messages: messagesReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -63,9 +63,22 @@
   z-index: 10;
 }
 
+.button {
+  width: 30% !important;
+  background-color: #343a40 !important;
+  border: none !important;
+}
+.card {
+  width: 75% !important;
+  background-color: #242424 !important;
+}
+
 @media (max-width: 576px) {
   .navbarHeight {
     height: auto;
     margin-bottom: 10px;
+  }
+  .card {
+    width: 90% !important;
   }
 }

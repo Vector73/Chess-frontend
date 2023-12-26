@@ -1,6 +1,6 @@
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGame } from '../features/gameSlice';
@@ -27,12 +27,63 @@ export default function Game() {
     const user = useSelector(state => state.users);
     const [blackTime, setBlackTime] = useState(game.time);
     const [whiteTime, setWhiteTime] = useState(game.time);
+    const audioRef = useRef(null);
 
     const handleResize = () => {
         setBoardWidth(window.innerWidth > 576 ? 470 : window.innerWidth - 20);
     };
 
-    const handleSquareClick = (square) => {
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        socket.emit("username", { username: user.username, reconnect: true });
+        socket.emit("joinRoom", { gameId: game.gameId });
+
+        fetchGame();
+        socket.on("pushMove", ({ fen, gameId, move }) => {
+            setSelectedSquare(null);
+            setFen(fen);
+            audioRef.current.play();
+            let highlightStyle = {};
+            highlightStyle[move.from] = {
+                backgroundColor: 'rgba(255, 223, 77, 0.5)',
+            };
+            highlightStyle[move.to] = {
+                backgroundColor: 'rgba(255, 223, 77, 0.5)',
+            };
+            setBoardStyle(highlightStyle)
+        })
+
+        socket.on("gameState", (gameState) => {
+            setWhiteTime(gameState.time.white);
+            setBlackTime(gameState.time.black);
+        })
+
+        socket.on('gameOver', ({ winner, reason, draw, abort }) => {
+            setGameOver(true);
+            setGameOverModal(true);
+
+            if (!draw && !abort) {
+                setGameState({
+                    winner,
+                    reason: reason,
+                    win: user.username === winner,
+                })
+            } else if (abort) {
+                setGameState({ abort });
+            } else {
+                setGameState({
+                    draw: true,
+                    reason: reason,
+                })
+            }
+        })
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [])
+
+    function handleSquareClick(square) {
         if (gameOver) return;
         const board = new Chess(fen);
         let piece = board.get(square);
@@ -48,9 +99,9 @@ export default function Game() {
         }
         if (selectedSquare && color !== game.color) {
             try {
+                setBoardStyle({});
                 movePiece(board, selectedSquare, square);
                 setSelectedSquare(null);
-                setBoardStyle({});
             } catch (e) {
                 console.log(e)
             }
@@ -71,57 +122,7 @@ export default function Game() {
         }
     };
 
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-
-        socket.emit("username", { username: user.username, reconnect: true });
-        socket.emit("joinRoom", { gameId: game.gameId });
-        fetchGame();
-        socket.on("pushMove", ({ fen, gameId, move }) => {
-            setSelectedSquare(null);
-            setFen(fen);
-
-            let highlightStyle = {};
-            highlightStyle[move.from] = {
-                backgroundColor: 'rgba(255, 223, 77, 0.5)',
-            };
-            highlightStyle[move.to] = {
-                backgroundColor: 'rgba(255, 223, 77, 0.5)',
-            };
-
-            setBoardStyle(highlightStyle)
-        })
-
-        socket.on("gameState", (gameState) => {
-            console.log("gameState");
-            setWhiteTime(gameState.time.white);
-            setBlackTime(gameState.time.black);
-        })
-
-        socket.on('gameOver', ({ winner, reason, draw }) => {
-            setGameOver(true);
-            setGameOverModal(true);
-            if (!draw) {
-                setGameState({
-                    color: winner ? 'w' : 'b',
-                    winner: !!game.color === winner ? user.username : game.opponent,
-                    reason: reason,
-                    win: !!game.color === winner,
-                })
-            } else {
-                setGameState({
-                    draw: true,
-                    reason: reason,
-                })
-            }
-        })
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [])
-
-    const onDrop = (sourceSquare, targetSquare) => {
+    function onDrop(sourceSquare, targetSquare) {
         if (gameOver) return;
         const board = new Chess(fen);
         try {
@@ -129,11 +130,12 @@ export default function Game() {
         } catch (e) { console.log(e) }
     };
 
-    const movePiece = (board, from, to, promotion) => {
+    function movePiece(board, from, to, promotion) {
         const move = board.move({ from: from, to: to, promotion: promotion });
         const isWhiteMove = move.color === 'w';
         if ((game.color && isWhiteMove) || (!game.color && !isWhiteMove)) {
             setFen(board.fen());
+            audioRef.current.play();
             socket.emit("move", { fen: board.fen(), opponent: game.opponent, gameId: game.gameId, move });
 
             let highlightStyle = {};
@@ -158,7 +160,6 @@ export default function Game() {
         });
 
         const activeGame = await response.json();
-        console.log(activeGame)
         if (activeGame.found) {
             setFen(activeGame.fen);
             setKey(Date.now());
@@ -178,7 +179,7 @@ export default function Game() {
 
     function msToTimer(ms) {
         var seconds = ms ? Math.floor((ms / 1000) % 60).toString().padStart(2, '0') : '00';
-        var minutes = ms ? Math.floor((ms / 60000)).toString() : '0';
+        var minutes = ms ? Math.floor((ms / 60000)).toString().padStart(2, '0') : '00';
         return minutes + ' : ' + seconds;
     }
 
@@ -201,7 +202,6 @@ export default function Game() {
     function promote(piece) {
         if (!piece) return;
         movePiece(new Chess(fen), moveState.from, moveState.to, piece[1].toLowerCase())
-        console.log(piece);
         return true;
     }
 
@@ -209,8 +209,8 @@ export default function Game() {
         <>
             <Col className='col-chess'>
                 <Row>
-                    <Col className='d-flex align-items-center' style={{ color: '#ae79ff' }}>
-                        {<FaUser style={{ marginRight: '5px', color: !game.color ? 'white' : 'gray' }} />} {playing && game.opponent}
+                    <Col className='d-flex align-items-center text-danger'>
+                        <FaUser style={{ marginRight: '5px', color: !game.color ? 'white' : 'gray' }} /> {playing && game.opponent}
                     </Col>
                     <Col xs={3} className='row-chess my-3 justify-content-end'>
                         <Card className='bg-dark text-white justify-content-end' style={{ width: '80px' }}>
@@ -240,7 +240,7 @@ export default function Game() {
 
                 <Row>
                     <Col className='d-flex align-items-center' style={{ color: '#ae79ff' }}>
-                        {<FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} />} {user.username}
+                        <FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} /> {user.username}
                     </Col>
                     <Col xs={3} className='row-chess my-3 justify-content-end'>
                         <Card className='bg-dark text-white justify-content-center' style={{ width: '80px' }}>
@@ -251,7 +251,8 @@ export default function Game() {
                     </Col>
                 </Row>
             </Col>
-            {gameOverModal && <GameOver show={gameOver} close={() => setGameOverModal(false)} gameState={gameState}/>}
+            <audio ref={audioRef} src={require("../public/move.mp3")} />
+            {gameOverModal && <GameOver show={gameOver} close={() => setGameOverModal(false)} gameState={gameState} />}
         </>
     );
 }

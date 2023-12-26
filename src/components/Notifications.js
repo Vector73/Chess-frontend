@@ -30,19 +30,19 @@ export default function Banner(props) {
                             <Dropdown.Item key={index}>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ color: 'white' }}>{challenge[0]}</div>
-                                    <div className="text-info">{challenge[1].time}</div>
+                                    <div className="text-info">{challenge[1].time}m</div>
                                     <div>
                                         <FaCheck
                                             className="mx-2"
                                             size={20}
                                             color="green"
-                                            style={{ border: '1px solid green', borderRadius: '50%', padding: '3px', marginBottom: '9px' }}
+                                            style={{ border: '1px solid green', borderRadius: '50%', padding: '3px', marginBottom: '3px' }}
                                             onClick={() => props.startGame(challenge[0])}
                                         />
                                         <FaTimes
                                             size={20}
                                             color="red"
-                                            style={{ border: '1px solid red', borderRadius: '50%', padding: '3px', marginBottom: '9px' }}
+                                            style={{ border: '1px solid red', borderRadius: '50%', padding: '3px', marginBottom: '3px' }}
                                             onClick={() => props.reject(challenge[0])}
                                         />
                                     </div>

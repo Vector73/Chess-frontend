@@ -3,7 +3,7 @@ import { FaCircle, FaDotCircle, FaMinus, FaPlus, FaSadTear, FaSkullCrossbones, F
 
 export default function GameItem({ game, username }) {
     return (
-        <Card style={{ backgroundColor: '#292b2d', padding: '20px', borderRadius: '10px', color: 'white', width: '100%' }}>
+        <Card style={{ backgroundColor: '#292b2d', padding: '10px 20px', borderRadius: '10px', color: 'white', width: '100%', margin: '5px 2px' }}>
             <Row>
                 <Col className="mx-2 text-left">
                     <Row className={game.status === 'd' ? "text-secondary" : "text-success"}>
