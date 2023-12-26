@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from '../features/messagesSlice';
 import { socket } from '../socket';
 import { FaArrowRight } from 'react-icons/fa';
-import { Howl } from 'howler';
 
 export default function Chat(props) {
     const [message, setMessage] = useState('');
