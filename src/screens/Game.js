@@ -239,7 +239,7 @@ export default function Game() {
                 </Row>
 
                 <Row>
-                    <Col className='d-flex align-items-center' style={{ color: '#ae79ff' }}>
+                    <Col className='d-flex align-items-center' style={{ color: '#79ff8e' }}>
                         <FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} /> {user.username}
                     </Col>
                     <Col xs={3} className='row-chess my-3 justify-content-end'>

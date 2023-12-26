@@ -157,13 +157,13 @@ export default function Play() {
                                     <Row className="p-2">No one online right now</Row>
                                 </Col>
                             }
-                            {playing && (
+                            {(playing || game.opponent) && (
                                 <Row className="mt-3 d-flex justify-content-start">
                                     <Button
                                         className={styles.button + " mx-2"}
                                         size="sm"
                                         onClick={handleResign}
-                                        disabled={!playing}
+                                        disabled={!(playing || game.opponent)}
                                     >
                                         <FaHandPaper className="mr-5" /> Resign
                                     </Button>
@@ -206,7 +206,7 @@ export default function Play() {
                                                 <Button className={styles.button}
                                                     size="sm"
                                                     onClick={handleDraw}
-                                                    disabled={!playing}
+                                                    disabled={!(playing || game.opponent)}
                                                 >
                                                     <FaPencilRuler className="mr-1" /> Request Draw
                                                 </Button>
