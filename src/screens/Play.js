@@ -222,7 +222,7 @@ export default function Play() {
                         </Card>
                     </Row>
                     <Row className="d-flex justify-content-center align-items-center">
-                        <Chat playing={playing} />
+                        <Chat playing={playing || game.opponent} />
                     </Row>
                 </Col>
             </Row>
