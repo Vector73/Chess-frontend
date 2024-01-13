@@ -14,7 +14,7 @@ export default function Register() {
     const onEmailChange = e => setEmail(e.target.value);
     const onPasswordChange = e => setPassword(e.target.value);
     const onUsernameChange = e => {
-        if (/^[a-zA-Z0-9]+$/.test(e.target.value)) {
+        if (/^[a-zA-Z0-9]+$/.test(e.target.value) || e.target.value === "") {
             setUsername(e.target.value)
         }
     };
