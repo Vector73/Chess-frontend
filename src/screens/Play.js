@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { setOnlineUsers } from "../features/onlineUsersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../socket";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Badge, Button, Card, Col, Container, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { FaBolt, FaCheck, FaClock, FaFire, FaHandPaper, FaPencilRuler, FaTimes, FaUserSlash } from "react-icons/fa";
 import styles from "../public/Home.module.css";

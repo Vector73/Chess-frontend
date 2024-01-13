@@ -1,5 +1,5 @@
 import { Card, Col, Row } from "react-bootstrap";
-import { FaCircle, FaDotCircle, FaMinus, FaPlus, FaSadTear, FaSkullCrossbones, FaSquare, FaTrophy } from "react-icons/fa";
+import { FaMinus, FaPlus, FaSquare } from "react-icons/fa";
 
 export default function GameItem({ game, username }) {
     return (

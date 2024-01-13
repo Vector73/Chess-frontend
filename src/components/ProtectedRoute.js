@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const ProtectedRoute = ({ allowedRoutes, children }) => {
     const user = useSelector(state => state.users)

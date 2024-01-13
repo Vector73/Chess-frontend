@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { setOnlineUsers } from "../features/onlineUsersSlice";
-import { Button, Card, Col, Container, Nav, Navbar, Row } from "react-bootstrap";
-import { FaChess, FaCogs, FaGamepad, FaUserCog } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { FaChess } from 'react-icons/fa';
 import { SideMenu } from "../components/Navbar";
 import GameItem from "../components/GameItem";
 import SimpleBar from 'simplebar-react';

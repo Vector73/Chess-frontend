@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Container, Dropdown, Form, ListGroup, Modal, NavDropdown } from "react-bootstrap";
-import { FaBell, FaCheck, FaCross, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import { FaBell, FaCheck, FaTimes } from "react-icons/fa";
 
 export default function Banner(props) {
     const [color, setColor] = useState("white");
@@ -8,7 +8,7 @@ export default function Banner(props) {
     useEffect(() => {
         let notification = false;
         Object.entries(props.challenges).forEach((challenge, index) => {
-            if (challenge[1].status === 'pending' && challenge[1].handshake === 0){
+            if (challenge[1].status === 'pending' && challenge[1].handshake === 0) {
                 setColor('warning')
                 notification = true;
             }

@@ -1,5 +1,5 @@
-import { Accordion, Button, Card, Nav, Navbar } from "react-bootstrap";
-import { FaBell, FaChess, FaChessKing, FaChessKnight, FaCogs, FaDoorOpen, FaUserCog } from "react-icons/fa";
+import { Nav, Navbar } from "react-bootstrap";
+import { FaChess, FaChessKnight, FaCogs, FaDoorOpen, FaUserCog } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from 'react';
 import styles from '../public/Home.module.css'

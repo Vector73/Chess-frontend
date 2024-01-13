@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Row, Col, Card, CardBody, Form, Button } from 'react-bootstrap';
+import { Container, Col, Card, Form, Button } from 'react-bootstrap';
 import styles from '../public/Home.module.css'
 import SimpleBar from 'simplebar-react';
 import { useDispatch, useSelector } from 'react-redux';

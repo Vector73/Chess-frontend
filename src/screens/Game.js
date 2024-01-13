@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGame } from '../features/gameSlice';
-import { useNavigate } from 'react-router-dom';
 import { Card, Col, Row } from 'react-bootstrap';
 import '../public/Login.css';
 import { FaChessBishop, FaChessKing, FaChessKnight, FaChessPawn, FaChessQueen, FaChessRook, FaUser } from 'react-icons/fa';
@@ -21,15 +20,14 @@ export default function Game() {
     const [playing, setPlaying] = useState(false);
     const [gameOverModal, setGameOverModal] = useState(false);
     const [gameState, setGameState] = useState({});
-    const [pieces, setPieces] = useState(['p', 'n', 'b', 'r', 'q', 'P', 'N', 'B', 'R', 'Q']);
+    const [pieces] = useState(['p', 'n', 'b', 'r', 'q', 'P', 'N', 'B', 'R', 'Q']);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const game = useSelector(state => state.game);
     const user = useSelector(state => state.users);
     const [blackTime, setBlackTime] = useState(game.time);
     const [whiteTime, setWhiteTime] = useState(game.time);
     const [yourCaptures, setYourCaptures] = useState({});
-    const [pieceIcons, setPieceIcons] = useState({
+    const [pieceIcons] = useState({
         'P': <FaChessPawn size={10} color="white" />,
         'N': <FaChessKnight size={10} color="white" />,
         'B': <FaChessBishop size={10} color="white" />,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card } from 'react-bootstrap';
 import '../public/Login.css';
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/userSlice";
@@ -11,7 +11,11 @@ export default function Login() {
     const [passwordError, setPasswordError] = useState("");
 
     const onPasswordChange = e => setPassword(e.target.value);
-    const onUsernameChange = e => setUsername(e.target.value);
+    const onUsernameChange = e => {
+        if (/^[a-zA-Z0-9]+$/.test(e.target.value)) {
+            setUsername(e.target.value)
+        }
+    };
     const dispatch = useDispatch();
 
     const checkCredentials = () => {
