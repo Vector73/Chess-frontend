@@ -115,7 +115,7 @@ export default function Play() {
                 <Col className="justify-content-center align-items-center">
                     <Row className="d-flex justify-content-center align-items-center">
                         <Card bg="dark" text="white" className={"p-4 d-flex " + styles.card}>
-                            {true ? (
+                            {onlineUsers.length ? (
                                 <Form>
                                     <Form.Group controlId="opponentSelect">
                                         <Form.Label>Play online</Form.Label>
@@ -146,7 +146,7 @@ export default function Play() {
                                         />
                                     </Form.Group>
                                     <InputGroup className="mt-3">
-                                        <Button variant="success" style={{ width: '100%' }} onClick={play} disabled={playing}>
+                                        <Button variant="success" style={{ width: '100%' }} onClick={play} disabled={(playing && game.opponent)}>
                                             Play
                                         </Button>
                                     </InputGroup>

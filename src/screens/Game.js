@@ -7,7 +7,7 @@ import { setGame } from '../features/gameSlice';
 import { useNavigate } from 'react-router-dom';
 import { Card, Col, Row } from 'react-bootstrap';
 import '../public/Login.css';
-import { FaUser } from 'react-icons/fa';
+import { FaChessBishop, FaChessKing, FaChessKnight, FaChessPawn, FaChessQueen, FaChessRook, FaUser } from 'react-icons/fa';
 import GameOver from '../components/GameOver';
 
 export default function Game() {
@@ -21,12 +21,29 @@ export default function Game() {
     const [playing, setPlaying] = useState(false);
     const [gameOverModal, setGameOverModal] = useState(false);
     const [gameState, setGameState] = useState({});
+    const [pieces, setPieces] = useState(['p', 'n', 'b', 'r', 'q', 'P', 'N', 'B', 'R', 'Q']);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const game = useSelector(state => state.game);
     const user = useSelector(state => state.users);
     const [blackTime, setBlackTime] = useState(game.time);
     const [whiteTime, setWhiteTime] = useState(game.time);
+    const [yourCaptures, setYourCaptures] = useState({});
+    const [pieceIcons, setPieceIcons] = useState({
+        'P': <FaChessPawn size={10} color="white" />,
+        'N': <FaChessKnight size={10} color="white" />,
+        'B': <FaChessBishop size={10} color="white" />,
+        'R': <FaChessRook size={10} color="white" />,
+        'Q': <FaChessQueen size={10} color="white" />,
+        'K': <FaChessKing size={10} color="white" />,
+        'p': <FaChessPawn size={10} color="gray" />,
+        'n': <FaChessKnight size={10} color="gray" />,
+        'b': <FaChessBishop size={10} color="gray" />,
+        'r': <FaChessRook size={10} color="gray" />,
+        'q': <FaChessQueen size={10} color="gray" />,
+        'k': <FaChessKing size={10} color="gray" />,
+    });
+    const [opponentCaptures, setOpponentCaptures] = useState({});
     const audioRef = useRef(null);
 
     const handleResize = () => {
@@ -51,6 +68,8 @@ export default function Game() {
                 backgroundColor: 'rgba(255, 223, 77, 0.5)',
             };
             setBoardStyle(highlightStyle)
+            setYourCaptures(getCapturedPieces(fen, !game.color));
+            setOpponentCaptures(getCapturedPieces(fen, game.color));
         })
 
         socket.on("gameState", (gameState) => {
@@ -82,6 +101,44 @@ export default function Game() {
             window.removeEventListener('resize', handleResize);
         };
     }, [])
+
+    function getPoints(missingPieces) {
+        const piecePoints = { 'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9 };
+        let points = 0;
+        Object.keys(missingPieces).forEach((piece) => {
+            if (missingPieces[piece]) {
+                points += piecePoints[piece.toLowerCase()] * missingPieces[piece];
+            }
+        })
+        return points;
+    }
+
+    function getCapturedPieces(fen, color) {
+        const allPieces = { 'P': 8, 'N': 2, 'B': 2, 'R': 2, 'Q': 1, 'K': 1, 'p': 8, 'n': 2, 'b': 2, 'r': 2, 'q': 1, 'k': 1 };
+        const boardPieces = {};
+        const pos = fen.split(" ")[0];
+        for (let i = 0; i < pos.length; i++) {
+            const fenChar = fen[i];
+            if ('PNBRQKpnbrqk'.includes(fenChar)) {
+                boardPieces[fenChar] ? boardPieces[fenChar]++ : boardPieces[fenChar] = 1;
+            }
+        }
+        const missingPieces = {}
+        Object.keys(allPieces).forEach((piece) => {
+            if (
+                (color && piece.toUpperCase() === piece)
+                || (!color && piece.toLowerCase() === piece)
+            ) {
+                if (!boardPieces[piece]) {
+                    missingPieces[piece] = allPieces[piece];
+                } else {
+                    missingPieces[piece] = allPieces[piece] - boardPieces[piece];
+                }
+            }
+        })
+        console.log(missingPieces)
+        return missingPieces;
+    }
 
     function handleSquareClick(square) {
         if (gameOver) return;
@@ -135,7 +192,6 @@ export default function Game() {
         const isWhiteMove = move.color === 'w';
         if ((game.color && isWhiteMove) || (!game.color && !isWhiteMove)) {
             setFen(board.fen());
-            audioRef.current.play();
             socket.emit("move", { fen: board.fen(), opponent: game.opponent, gameId: game.gameId, move });
 
             let highlightStyle = {};
@@ -146,6 +202,9 @@ export default function Game() {
                 backgroundColor: 'rgba(255, 223, 77, 0.5)',
             };
             setBoardStyle(highlightStyle)
+            setYourCaptures(getCapturedPieces(board.fen(), !game.color));
+            setOpponentCaptures(getCapturedPieces(board.fen(), game.color));
+            audioRef.current.play();
         }
     }
 
@@ -162,6 +221,8 @@ export default function Game() {
         const activeGame = await response.json();
         if (activeGame.found) {
             setFen(activeGame.fen);
+            setYourCaptures(getCapturedPieces(activeGame.fen, !game.color));
+            setOpponentCaptures(getCapturedPieces(activeGame.fen, game.color));
             setKey(Date.now());
             dispatch(setGame({
                 opponent: activeGame.opponent,
@@ -210,7 +271,28 @@ export default function Game() {
             <Col className='col-chess'>
                 <Row>
                     <Col className='d-flex align-items-center text-danger'>
-                        <FaUser style={{ marginRight: '5px', color: !game.color ? 'white' : 'gray' }} /> {playing && game.opponent}
+                        <FaUser style={{ marginRight: '5px', color: !game.color ? 'white' : 'gray' }} /> {playing && game.opponent} &nbsp;
+                        {
+                            pieces.map((piece) => {
+                                const value = opponentCaptures[piece];
+                                return (
+                                    <>
+                                        {
+                                            Array.from({ length: value }, (_, i) => (
+                                                pieceIcons[piece]
+                                            ))
+                                        }
+                                    </>
+                                )
+                            })
+                        }
+                        {
+                            getPoints(opponentCaptures) ? (
+                                <span className='text-secondary mx-2' style={{ fontSize: "12px" }}>
+                                    &nbsp;+ {getPoints(opponentCaptures)}
+                                </span>
+                            ) : null
+                        }
                     </Col>
                     <Col xs={3} className='row-chess my-3 justify-content-end'>
                         <Card className='bg-dark text-white justify-content-end' style={{ width: '80px' }}>
@@ -239,8 +321,29 @@ export default function Game() {
                 </Row>
 
                 <Row>
-                    <Col className='d-flex align-items-center' style={{ color: '#79ff8e' }}>
-                        <FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} /> {user.username}
+                    <Col className='d-flex align-items-center' style={{ color: '#79ff8e', wordWrap: "break-word" }}>
+                        <FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} /> {user.username} &nbsp;
+                        {
+                            pieces.map((piece) => {
+                                const value = yourCaptures[piece];
+                                return (
+                                    <>
+                                        {
+                                            Array.from({ length: value }, (_, i) => (
+                                                pieceIcons[piece]
+                                            ))
+                                        }
+                                    </>
+                                )
+                            })
+                        }
+                        {
+                            getPoints(yourCaptures) ? (
+                                <span className='text-secondary mx-2' style={{ fontSize: "12px" }}>
+                                    &nbsp;+ {getPoints(yourCaptures)}
+                                </span>
+                            ) : null
+                        }
                     </Col>
                     <Col xs={3} className='row-chess my-3 justify-content-end'>
                         <Card className='bg-dark text-white justify-content-center' style={{ width: '80px' }}>
