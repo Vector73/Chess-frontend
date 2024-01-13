@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Container, Card } from 'react-bootstrap';
+import { Outlet, useLocation } from "react-router-dom";
 import { socket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
 import { setOnlineUsers } from "./features/onlineUsersSlice";
 import { setGame } from './features/gameSlice';
-import Home from "./screens/Home";
-import Banner from "./components/Notifications";
 import { addChallenge, removeChallenge } from "./features/challengeSlice";
 import StyledLink from "./components/StyledLink";
 import Loading from "./components/Loading";

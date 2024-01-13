@@ -10,6 +10,7 @@ export default function Profile({ show, handleClose }) {
     const [newPassword, setNewPassword] = useState('');
     const user = useSelector(state => state.users);
     const [error, setError] = useState('');
+    const [newPassError, setNewPassError] = useState('');
 
     useEffect(() => {
         const apiUrl = process.env.REACT_APP_API_URL;
@@ -35,8 +36,13 @@ export default function Profile({ show, handleClose }) {
 
     const handleSave = () => {
         if (password === oldPassword) {
+            if (newPassword.length < 8) {
+                setNewPassError("Password must be greater than 7 characters");
+                return;
+            }
             setPassword(newPassword);
-            setError('');
+            setError("");
+            setNewPassError("");
             const args = {
                 username: username,
                 oldPassword: oldPassword,
@@ -117,6 +123,7 @@ export default function Profile({ show, handleClose }) {
                             onChange={(e) => setNewPassword(e.target.value)}
                             className='bg-dark text-white'
                         />
+                        <Form.Control.Feedback type="invalid">{newPassError}</Form.Control.Feedback>
                     </Form.Group>
                 </Form>
             </Modal.Body>
