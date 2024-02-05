@@ -29,11 +29,6 @@ const GameOver = ({ show, close, gameState }) => {
                         : <p style={{ textAlign: 'center' }}>{gameState.winner} won by {gameState.reason}</p>
                 }
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary">
-                    Close
-                </Button>
-            </Modal.Footer>
         </Modal>
     );
 };

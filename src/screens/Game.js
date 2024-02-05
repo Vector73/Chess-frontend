@@ -134,7 +134,6 @@ export default function Game() {
                 }
             }
         })
-        console.log(missingPieces)
         return missingPieces;
     }
 
@@ -267,7 +266,7 @@ export default function Game() {
     return (
         <>
             <Col className='col-chess'>
-                <Row>
+                <Row  style={{maxWidth: "500px"}}>
                     <Col className='d-flex align-items-center text-danger'>
                         <FaUser style={{ marginRight: '5px', color: !game.color ? 'white' : 'gray' }} /> {playing && game.opponent} &nbsp;
                         {
@@ -285,14 +284,14 @@ export default function Game() {
                             })
                         }
                         {
-                            getPoints(opponentCaptures) ? (
+                            getPoints(yourCaptures) - getPoints(opponentCaptures) < 0 ? (
                                 <span className='text-secondary mx-2' style={{ fontSize: "12px" }}>
-                                    &nbsp;+ {getPoints(opponentCaptures)}
+                                    &nbsp;+ {getPoints(opponentCaptures) - getPoints(yourCaptures)}
                                 </span>
                             ) : null
                         }
                     </Col>
-                    <Col xs={3} className='row-chess my-3 justify-content-end'>
+                    <Col xs={3} className='my-3 d-flex justify-content-end'>
                         <Card className='bg-dark text-white justify-content-end' style={{ width: '80px' }}>
                             <Card.Body className='p-2'>
                                 <div className='text-info'>{msToTimer(!game.color ? whiteTime : blackTime)}</div>
@@ -318,7 +317,7 @@ export default function Game() {
                     </div>
                 </Row>
 
-                <Row>
+                <Row style={{maxWidth: "500px"}}>
                     <Col className='d-flex align-items-center' style={{ color: '#79ff8e', wordWrap: "break-word" }}>
                         <FaUser style={{ marginRight: '5px', color: game.color ? 'white' : 'gray' }} /> {user.username} &nbsp;
                         {
@@ -336,14 +335,14 @@ export default function Game() {
                             })
                         }
                         {
-                            getPoints(yourCaptures) ? (
+                            getPoints(yourCaptures) - getPoints(opponentCaptures) > 0 ? (
                                 <span className='text-secondary mx-2' style={{ fontSize: "12px" }}>
-                                    &nbsp;+ {getPoints(yourCaptures)}
+                                    &nbsp;+ {getPoints(yourCaptures) - getPoints(opponentCaptures)}
                                 </span>
                             ) : null
                         }
                     </Col>
-                    <Col xs={3} className='row-chess my-3 justify-content-end'>
+                    <Col xs={3} className='row-chess my-3 d-flex justify-content-end'>
                         <Card className='bg-dark text-white justify-content-center' style={{ width: '80px' }}>
                             <Card.Body className='p-2'>
                                 <div className='text-info'>{msToTimer(game.color ? whiteTime : blackTime)}</div>

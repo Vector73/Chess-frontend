@@ -32,7 +32,6 @@ export default function Login() {
         return true;
     }
 
-
     const onLogin = async () => {
         if (!checkCredentials()) return;
         const userData = {

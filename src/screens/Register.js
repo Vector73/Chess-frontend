@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Container, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card, AlertLink } from 'react-bootstrap';
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/userSlice";
+import OTP from "../components/OTP";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -10,6 +11,9 @@ export default function Register() {
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [otpError, setOtpError] = useState("");
+    const [emailFound, setEmailFound] = useState(false);
+    const [otp, setOtp] = useState("");
 
     const onEmailChange = e => setEmail(e.target.value);
     const onPasswordChange = e => setPassword(e.target.value);
@@ -39,6 +43,32 @@ export default function Register() {
         return true;
     }
 
+    const Register = async () => {
+        const userData = {
+            email,
+            otp,
+        }
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const response = await fetch(`${apiUrl}/login/verify-otp`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+        });
+        const status = await response.json();
+        console.log(status)
+        if (status.success) {
+            dispatch(setUser({
+                username,
+                email,
+                authenticated: 1,
+            }))
+            window.location.href = '/home'
+        } else if (status.otpInvalid) {
+            setOtpError("Invalid OTP.");
+        }
+    }
 
     const onRegister = async () => {
         if (!checkCredentials()) return;
@@ -58,12 +88,7 @@ export default function Register() {
 
         const status = await response.json();
         if (status.success) {
-            dispatch(setUser({
-                username,
-                email,
-                authenticated: 1,
-            }))
-            window.location.href = '/home'
+            setEmailFound(true);
         }
         if (!status.success) {
             if (status.emailExists) {
@@ -85,52 +110,59 @@ export default function Register() {
                     <Card.Body>
                         <Card.Title className="text-center text-white">Register</Card.Title>
                         <hr style={{ color: 'white' }} />
-                        <Form className="text-white">
-                            <Form.Group className="m-4" controlId="formUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    className="text-light bg-dark"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={onUsernameChange}
-                                    isInvalid={!!usernameError}
-                                />
-                                <Form.Control.Feedback type="invalid">{usernameError}</Form.Control.Feedback>
-                            </Form.Group>
+                        {emailFound ? <OTP otp={otp} setOtp={setOtp} Register={Register} error={otpError} email={email} /> : 
+                            <Form className="text-white">
+                                <Form.Group className="m-4" controlId="formUsername">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        className="text-light bg-dark"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={onUsernameChange}
+                                        isInvalid={!!usernameError}
+                                    />
+                                    <Form.Control.Feedback type="invalid">{usernameError}</Form.Control.Feedback>
+                                </Form.Group>
 
-                            <Form.Group className="m-4" controlId="formEmail">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    className="text-light bg-dark"
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={onEmailChange}
-                                    isInvalid={!!emailError}
-                                />
-                                <Form.Control.Feedback type="invalid">{emailError}</Form.Control.Feedback>
-                            </Form.Group>
+                                <Form.Group className="m-4" controlId="formEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        className="text-light bg-dark"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={onEmailChange}
+                                        isInvalid={!!emailError}
+                                    />
+                                    <Form.Control.Feedback type="invalid">{emailError}</Form.Control.Feedback>
+                                </Form.Group>
 
-                            <Form.Group className="m-4" controlId="formPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    className="text-light bg-dark"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={onPasswordChange}
-                                    isInvalid={!!passwordError}
-                                />
-                                <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
-                            </Form.Group>
+                                <Form.Group className="m-4" controlId="formPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        className="text-light bg-dark"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={onPasswordChange}
+                                        isInvalid={!!passwordError}
+                                    />
+                                    <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
+                                </Form.Group>
 
-                            <div className="d-flex justify-content-center m-4">
-                                <Button variant="success" style={{ width: '100%' }} onClick={onRegister}>
-                                    Sign up
-                                </Button>
+                                <div className="d-flex justify-content-center m-4">
+                                    <Button variant="success" style={{ width: '100%' }} onClick={onRegister}>
+                                        Get OTP
+                                    </Button>
+                                </div>
+                            </Form>
+                        }
+                        {emailFound &&
+                            <div className="d-flex justify-content-center">
+                                <AlertLink className="text-info" onClick={()=>setEmailFound(false)}>Back</AlertLink>
                             </div>
-                        </Form>
+                        }
                     </Card.Body>
                 </Card>
             </Container>

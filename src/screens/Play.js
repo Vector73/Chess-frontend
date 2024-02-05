@@ -186,11 +186,6 @@ export default function Play() {
                                                     <FaTimes className="mr-1" /> Reject
                                                 </Button>
                                             </Modal.Body>
-                                            <Modal.Footer>
-                                                <Button variant="secondary">
-                                                    Close
-                                                </Button>
-                                            </Modal.Footer>
                                         </Modal>
                                     )
                                         : requestDraw ? (

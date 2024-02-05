@@ -8,11 +8,6 @@
   box-sizing: "border-box" !important;
 }
 
-.row-chess {
-  margin-right: 7rem !important;
-  padding: 1px !important;
-}
-
 @media (max-width: 576px) {
   .row-chess {
     margin: 0 !important;
