@@ -9,7 +9,7 @@ export default function OTP({ otp, setOtp, Register, error, email }) {
     return (
         <Form className="text-white">
             <Form.Group className="m-4" controlId="formUsername">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>OTP</Form.Label>
                 <Form.Control
                     type="text"
                     className="text-light bg-dark"
