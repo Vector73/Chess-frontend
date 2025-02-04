@@ -23,7 +23,7 @@ export default function StyledLink({ to, children }) {
                     transition: 'background-color 0.3s',
                 }}
                 onMouseOver={(e) => {
-                    e.target.style.backgroundColor = '#ccc';
+                    e.target.style.backgroundColor = 'white';
                     e.target.style.color = 'black';
                 }}
                 onMouseOut={(e) => {
