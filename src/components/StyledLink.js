@@ -30,7 +30,6 @@ export default function StyledLink({ to, children }) {
                     e.target.style.backgroundColor = '#28a745'
                     e.target.style.color = 'white'
                 }}
-                onClick={(e) => (window.location.href = to)}
             >
                 {children}
             </div>
